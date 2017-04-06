@@ -1,5 +1,8 @@
 Nodejs application based on https://github.com/karpathy/neuraltalk2 model.
 
+![Alt text](sc1.jpg?raw=true "Home Page")
+![Alt text](sc2.jpg?raw=true "Captioned text")
+
 git clone https://github.com/torch/distro.git ~/torch --recursive
 cd ~/torch; bash install-deps;
 ./install.sh
