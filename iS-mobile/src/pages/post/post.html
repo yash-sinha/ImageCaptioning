@@ -1,0 +1,51 @@
+<ion-header>
+	<ion-navbar>
+		<ion-title>
+			ImageSpeak
+		</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content class="content"> 
+	<ion-label center>Please upload the image</ion-label>
+
+
+	<ion-list no-lines>
+		<ion-item>
+			<ion-item padding class='content'>
+    			<img src="{{ imgData }}" />
+    			<img *ngIf="imageReady2" src="assets/img/placeholder.jpeg" class="slide-image"/>
+			</ion-item>
+			<ion-item text-wrap *ngIf="captionReady">
+			<p padding class="modtext" text-wrap>
+			{{caption}}	
+			</p>
+			</ion-item>
+			<ion-item class="content">
+	            <button (click)="takePicture('camera')" >
+	                <ion-icon  class = 'camera' name="camera"></ion-icon>
+	            </button>
+
+	            <button (click)="takePicture('gallery')">
+	                <ion-icon class = 'folder' name="folder"></ion-icon>
+	            </button>
+	         </ion-item>
+            <ion-row responsive-sm>
+				<ion-col *ngIf="imageReady" >
+					<button ion-button (click)="onPostSubmit()" color="blue" block >Generate caption</button>
+				</ion-col>
+			</ion-row>
+            
+
+
+        </ion-item>
+		
+
+			<p padding-left>
+			{{tags}}	
+			</p>
+		
+		
+	</ion-list>
+
+</ion-content>
