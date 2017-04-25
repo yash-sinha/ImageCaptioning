@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-
+import {TextToSpeech} from '@ionic-native/text-to-speech'; 
 
 import {NativeStorage } from 'ionic-native';
 
@@ -89,6 +89,7 @@ var env;
 
       constructor(public navCtrl: NavController, public http : Http, 
         public params:NavParams, public platform: Platform, public loadingCtrl: LoadingController, 
+        private tts: TextToSpeech,
         public toastCtrl: ToastController) {
 
         //alert(this.lat);
@@ -196,7 +197,7 @@ var env;
       }
 
       private startUploading(){
-        var url = "http://24.170.202.5:8000/upload/";
+        var url = "http://52.15.222.230:8080/upload/";
         console.log('WOrking 2x8');
         // File for Upload
         var targetPath = this.pathForImage(this.lastImage);
@@ -231,10 +232,10 @@ var env;
             this.loading.dismissAll()
             this.presentToast('Image succesfully uploaded.');
             console.log('WOrking 3');
-               this.loading = this.loadingCtrl.create({
-            content: 'Generating Caption...',
-          });
-          this.loading.present();
+            this.loading = this.loadingCtrl.create({
+              content: 'Generating Caption...',
+            });
+            this.loading.present();
             this.getResult();
           }, err => {
             this.loading.dismissAll()
@@ -244,10 +245,12 @@ var env;
           console.log('WOrking 5');
         }
 
+
+
         private getResult(){
-          var url = 'http://24.170.202.5:8000/result/';
+          var url = 'http://52.15.222.230:8080/result/';
           console.log('WOrking 6');
-       
+
           this.http.get(url).map(res => res.json()).subscribe(data => {
             // console.log('Status='+data.status);
             //console.log(JSON.stringify(data));
@@ -263,6 +266,7 @@ var env;
             this.presentToast(data[0].caption);
             this.caption="\""+data[0].caption+"\"";
             this.captionReady = true;
+            this.sayText(this.caption);
             env.imageReady = false;
             this.loading.dismissAll()
             console.log('WOrking 8');
@@ -272,18 +276,18 @@ var env;
             this.presentToast('Error in Get Request');
             console.log('Error Get'+err);
           });
-
-
-           //this.loading.dismissAll()
-
-          // this.http.get(url).subscribe(result =>{
-          //   console.log('Status='+result.status);
-          //   console.log(JSON.stringify(result.json()));
-          //   this.presentToast(JSON.stringify(result.json()));
-          // }, error=>{
-          //   console.log(error.toString());
-          // });
         }
+
+        private async sayText(text):Promise<any>{
+          try{
+            await this.tts.speak({text: text, rate: 1.5});
+          }
+          catch(e){
+            console.log(e);
+          }
+        }
+
+
 
         private presentToast(text) {
           let toast = this.toastCtrl.create({
@@ -369,114 +373,6 @@ var env;
               // });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-              //let url = 'http://citysavior.pythonanywhere.com/posts/api/post/';
-              //   let lat = Number(this.lat);
-              //   let lon = Number(this.lon);
-              //     //let body = JSON.stringify({ title: 'tes1', desc: 'test', lat: '2322', lon: '2322', email: 'purnendurocks@gmail.com', category :'other'});
-              //     //alert(body);
-              //     var email = useremail.replace('@','%40');
-              //     let testbody = 'lat='+lat+'&title='+this.title+'&email='+email+'&category='+this.category+'&desc='+this.desc+'&lon='+lon;
-              //     //alert(testbody);
-              //     //let body = encodeURIComponent(testbody);
-              //     //alert(body);
-              //     //body = 'lat=233&title=test&email=purnendurocks%40gmail.com&category=other&desc=test&lon=2322';
-              //     //var encodedBody = encodeURIComponent(body);
-              //     //alert(encodedBody);
-              //     //alert(body);
-              //  let headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
-              //  let options = new RequestOptions({ headers:headers});
-              //  this.http.post(url,testbody,options).subscribe( res => {
-                //  console.log(res.status);
-                //   if(res.status == 201)
-                //   {
-                  //       alert('Post submitted successfully');
-                  //       // nav.setRoot(TabsPage);
-
-                  //   }
-                  //   }, err => {
-                    //    console.log('Submission error occured');
-                    //     alert('error '+err);
-                    //     alert(JSON.stringify(err.json()));
-                    // console.log(JSON.stringify(err.json()));
-                    //   });
-
-/*
-
-  var req = {
-      method: 'POST',
-      url: 'http://lexico.pythonanywhere.com/vocabsession/api/userprog/',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: {"user":"riddhima", "word":$scope.word, "level":$scope.newLevel}
-    }
-
-    $http(req).then(function (response) {
-      ////////alert("blah");
-    }, function (response) {
-      ////////alert("nah");
-      // Failure Function
-      });
-
-
-
-
-    let url1 = 'http://citysavior.pythonanywhere.com/posts/api/member/';
-      let body1= JSON.stringify({'email': 'test101@swamphacks.com','name':'test1'});
-    let headers1 = new Headers({'Content-Type': 'application/json'});
-    let options1 = new RequestOptions({ headers:headers});
-    this.http.post(url1,body1,options1).subscribe( res => {
-    console.log(res.status);
-     if(res.status == 201)
-     {
-        alert('member url post works!');
-     }
-     }, err => {
-      console.log('Sign up Error occured');
-      alert('error '+err);
-    console.log(JSON.stringify(err.json()));
-     });
-
-
-
-
-    let url = 'http://citysavior.pythonanywhere.com/posts/api/post_search_nearby/';
-  let body = JSON.stringify({'min_lat': lat_min, 'min_lon': lng_min, 'max_lat': lat_max, 'max_lon': lng_max});
-  
-  let headers = new Headers({'Content-Type': 'application/json'});
-  let options = new RequestOptions({ headers:headers});
-  this.http.post(url,body,options).subscribe( result => {
-  console.log('Result:'+result.status);
-  console.log('Data ='+this.data.length);
-  console.log('Markers ='+this.markers.length);
-  if(this.data.length > 0){
-   this.data.length =0;
-   this.markers.length =0;
-   this.map.clear();
-   }
-  this.data = result.json();
-     //console.log(JSON.stringify(this.data));
-  
-  this.loading.dismiss();
-  console.log('Data ='+this.data.length);
-  console.log('Markers ='+this.markers.length);
-  this.map.setClickable(true);
-  });
-  }
-
-  */
 
 
 }

@@ -9,6 +9,8 @@ import { IssuePostPage } from '../pages/post/post';
 
 import { PostDetailPage } from '../pages/postdetail/postdetail';
 
+import { TextToSpeech } from '@ionic-native/text-to-speech'
+
 
 
 @NgModule({
@@ -26,6 +28,7 @@ import { PostDetailPage } from '../pages/postdetail/postdetail';
     IssuePostPage,
     PostDetailPage
   ],
-  providers: [ Storage]
+  providers: [ Storage, TextToSpeech]
+
 })
 export class AppModule { }
